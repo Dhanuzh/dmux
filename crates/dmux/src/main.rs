@@ -571,8 +571,21 @@ struct UiConfig {
 fn load_ui_config() -> UiConfig {
     let mut cfg = UiConfig::default();
     let Some(home) = std::env::var_os("HOME") else { return cfg };
-    let path = std::path::PathBuf::from(home).join(".dmux.conf");
-    let Ok(contents) = std::fs::read_to_string(&path) else { return cfg };
+    let home = std::path::PathBuf::from(home);
+    let candidates = [
+        home.join(".dmux.conf"),
+        home.join(".config/dmux/dmux.conf"),
+        home.join(".tmux.conf"),
+        home.join(".config/tmux/tmux.conf"),
+    ];
+    let mut contents = String::new();
+    for path in candidates {
+        if let Ok(c) = std::fs::read_to_string(&path) {
+            contents.push_str(&c);
+            contents.push('\n');
+        }
+    }
+    if contents.is_empty() { return cfg; }
     for line in contents.lines() {
         let trimmed = line.trim();
         if trimmed.is_empty() || trimmed.starts_with('#') { continue; }
@@ -634,6 +647,20 @@ fn substitute_status(template: &str, session: &str, window: &str, pane: &str) ->
         }
     }
     out
+}
+
+fn parse_prefix_key(spec: &str) -> Option<char> {
+    let s = spec.trim().to_ascii_lowercase();
+    let s = s.strip_prefix("c-").or_else(|| s.strip_prefix("ctrl-")).unwrap_or(&s);
+    s.chars().next()
+}
+
+fn fetch_server_prefix(socket: &std::path::Path) -> Option<String> {
+    let resp = send_request(socket, Request::ShowOptions { name: Some("prefix".to_string()) }).ok()?;
+    match resp {
+        Response::Options(opts) => opts.into_iter().find(|nv| nv.name == "prefix").map(|nv| nv.value),
+        _ => None,
+    }
 }
 
 fn parse_color_name(s: &str) -> Option<Color> {
@@ -712,6 +739,11 @@ fn run_ui(socket: &std::path::Path, session: Option<String>) -> Result<()> {
 
     let _guard = TerminalGuard::enter()?;
     let ui_config = load_ui_config();
+    let server_prefix = fetch_server_prefix(socket);
+    let prefix_char = ui_config.prefix_key.as_deref()
+        .or(server_prefix.as_deref())
+        .and_then(parse_prefix_key)
+        .unwrap_or('b');
     let mut prefix = false;
     let mut show_meta = false;
     let mut command_mode: Option<String> = None;
@@ -1115,7 +1147,7 @@ fn run_ui(socket: &std::path::Path, session: Option<String>) -> Result<()> {
                     }
 
                     if key.modifiers.contains(KeyModifiers::CONTROL)
-                        && key.code == KeyCode::Char('b')
+                        && key.code == KeyCode::Char(prefix_char)
                     {
                         prefix = true;
                         continue;

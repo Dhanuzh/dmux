@@ -402,6 +402,8 @@ pub fn run(socket_path: &Path) -> Result<()> {
         None => Arc::new(Mutex::new(ServerState::new())),
     };
 
+    load_user_configs(Arc::clone(&state), Arc::clone(&runtime));
+
     for stream in listener.incoming() {
         let stream = stream.context("failed to accept client connection")?;
         let state = Arc::clone(&state);
@@ -457,6 +459,24 @@ fn handle_client(
     stream.flush().context("failed to flush response")?;
 
     Ok(())
+}
+
+fn load_user_configs(state: Arc<Mutex<ServerState>>, runtime: Arc<Mutex<PtyRuntime>>) {
+    let home = match std::env::var_os("HOME") {
+        Some(h) => std::path::PathBuf::from(h),
+        None => return,
+    };
+    let candidates = [
+        home.join(".dmux.conf"),
+        home.join(".config/dmux/dmux.conf"),
+        home.join(".tmux.conf"),
+        home.join(".config/tmux/tmux.conf"),
+    ];
+    for path in candidates {
+        if !path.is_file() { continue; }
+        let req = Request::ExecuteRaw { command: format!("source-file {}", path.display()) };
+        let _ = handle_request(req, Arc::clone(&state), Arc::clone(&runtime));
+    }
 }
 
 fn state_file_path() -> Option<std::path::PathBuf> {
