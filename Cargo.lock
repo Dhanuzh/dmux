@@ -148,45 +148,10 @@ dependencies = [
  "anyhow",
  "clap",
  "crossterm",
- "dmux-rs-client",
- "dmux-rs-proto",
- "dmux-rs-server",
-]
-
-[[package]]
-name = "dmux-rs-client"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "dmux-rs-proto",
- "serde_json",
-]
-
-[[package]]
-name = "dmux-rs-core"
-version = "0.1.0"
-dependencies = [
+ "libc",
  "serde",
  "serde_json",
  "thiserror",
-]
-
-[[package]]
-name = "dmux-rs-proto"
-version = "0.1.0"
-dependencies = [
- "serde",
-]
-
-[[package]]
-name = "dmux-rs-server"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "dmux-rs-core",
- "dmux-rs-proto",
- "libc",
- "serde_json",
 ]
 
 [[package]]

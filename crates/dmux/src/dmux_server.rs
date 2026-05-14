@@ -11,8 +11,10 @@ use std::time::Duration;
 use std::{collections::BTreeMap, collections::HashSet};
 
 use anyhow::{Context, Result};
-use dmux_core::ServerState;
-use dmux_proto::{ClientInfo, NameValue, PaneInfo, Request, Response, SessionInfo, WindowInfo};
+use crate::dmux_core;
+use crate::dmux_proto;
+use crate::dmux_core::ServerState;
+use crate::dmux_proto::{ClientInfo, NameValue, PaneInfo, Request, Response, SessionInfo, WindowInfo};
 
 #[derive(Debug, Default)]
 struct CompatState {

@@ -1,11 +1,5 @@
 [workspace]
-members = [
-  "crates/dmux",
-  "crates/dmux-client",
-  "crates/dmux-core",
-  "crates/dmux-proto",
-  "crates/dmux-server",
-]
+members = ["crates/dmux"]
 resolver = "2"
 
 [workspace.package]

@@ -3,7 +3,7 @@ use std::os::unix::net::UnixStream;
 use std::path::Path;
 
 use anyhow::{anyhow, Context, Result};
-use dmux_proto::{Request, Response};
+use crate::dmux_proto::{Request, Response};
 
 pub fn send_request(socket_path: &Path, request: Request) -> Result<Response> {
     let mut stream = UnixStream::connect(socket_path)

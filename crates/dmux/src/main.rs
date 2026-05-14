@@ -1,3 +1,8 @@
+mod dmux_proto;
+mod dmux_core;
+mod dmux_client;
+mod dmux_server;
+
 use std::collections::hash_map::DefaultHasher;
 use std::hash::{Hash, Hasher};
 use std::io::Write;
@@ -10,8 +15,8 @@ use crossterm::event::{self, DisableMouseCapture, EnableMouseCapture, Event, Key
 use crossterm::style::{Color, ResetColor, SetBackgroundColor, SetForegroundColor};
 use crossterm::terminal::{self};
 use crossterm::{cursor, execute};
-use dmux_client::send_request;
-use dmux_proto::{PaneInfo, Request, Response, SessionInfo, WindowInfo};
+use crate::dmux_client::send_request;
+use crate::dmux_proto::{PaneInfo, Request, Response, SessionInfo, WindowInfo};
 
 #[derive(Debug, Parser)]
 #[command(name = "dmux")]
