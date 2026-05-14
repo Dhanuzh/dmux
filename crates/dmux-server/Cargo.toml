@@ -1,0 +1,22 @@
+[package]
+name = "dmux-rs-server"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Server runtime for dmux-rs (Rust tmux clone) — PTY supervisor and command dispatcher."
+repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lib]
+name = "dmux_server"
+path = "src/lib.rs"
+
+[dependencies]
+anyhow.workspace = true
+serde_json.workspace = true
+libc = "0.2"
+dmux-core = { version = "0.1.0", path = "../dmux-core", package = "dmux-rs-core" }
+dmux-proto = { version = "0.1.0", path = "../dmux-proto", package = "dmux-rs-proto" }

@@ -1,0 +1,27 @@
+[workspace]
+members = [
+  "crates/dmux",
+  "crates/dmux-client",
+  "crates/dmux-core",
+  "crates/dmux-proto",
+  "crates/dmux-server",
+]
+resolver = "2"
+
+[workspace.package]
+edition = "2021"
+version = "0.1.0"
+license = "MIT"
+authors = ["dmux-rs contributors"]
+description = "Rust rewrite of tmux: terminal multiplexer with sessions, windows, panes, layouts, floating panes, mouse, copy mode."
+repository = "https://github.com/Dhanuzh/dmux"
+homepage = "https://github.com/Dhanuzh/dmux"
+keywords = ["tmux", "terminal", "multiplexer", "tui", "pty"]
+categories = ["command-line-utilities"]
+
+[workspace.dependencies]
+anyhow = "1.0"
+clap = { version = "4.5", features = ["derive"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+thiserror = "1.0"

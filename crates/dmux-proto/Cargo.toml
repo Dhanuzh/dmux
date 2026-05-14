@@ -1,0 +1,18 @@
+[package]
+name = "dmux-rs-proto"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+description = "Wire protocol types for dmux-rs (Rust tmux clone)."
+repository.workspace = true
+homepage.workspace = true
+keywords.workspace = true
+categories.workspace = true
+
+[lib]
+name = "dmux_proto"
+path = "src/lib.rs"
+
+[dependencies]
+serde.workspace = true
